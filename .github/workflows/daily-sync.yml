@@ -1,0 +1,37 @@
+# .github/workflows/daily-sync.yml
+# Runs every day at 01:00 UTC
+
+name: Daily Stock Sync
+
+on:
+  schedule:
+    - cron: "0 1 * * *"   # 01:00 UTC daily  (06:30 IST / 11:00 AEST)
+  workflow_dispatch:        # allow manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Update Metadata
+        env:
+          SUPABASE_URL:              ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          FINNHUB_API_KEY:           ${{ secrets.FINNHUB_API_KEY }}
+        run: deno run --allow-net --allow-env scripts/updateMetadata.ts
+
+      - name: Sync New Stocks
+        env:
+          SUPABASE_URL:              ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          FINNHUB_API_KEY:           ${{ secrets.FINNHUB_API_KEY }}
+        run: deno run --allow-net --allow-env scripts/syncNewStocks.ts

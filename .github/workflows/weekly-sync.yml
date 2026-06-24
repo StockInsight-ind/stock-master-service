@@ -1,0 +1,30 @@
+# .github/workflows/weekly-sync.yml
+# Runs every Sunday at 02:00 UTC
+
+name: Weekly Delist Sync
+
+on:
+  schedule:
+    - cron: "0 2 * * 0"   # Sunday 02:00 UTC
+  workflow_dispatch:
+
+jobs:
+  delist-sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Sync Delisted Stocks
+        env:
+          SUPABASE_URL:              ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          FINNHUB_API_KEY:           ${{ secrets.FINNHUB_API_KEY }}
+        run: deno run --allow-net --allow-env scripts/syncDelistedStocks.ts
