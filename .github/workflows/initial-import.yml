@@ -20,16 +20,17 @@ jobs:
         with:
           deno-version: v1.x
 
-      - name: Full Import — India
-        env:
-          SUPABASE_URL:              ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-          FINNHUB_API_KEY:           ${{ secrets.FINNHUB_API_KEY }}
-        run: |
-          deno run --allow-net --allow-env - <<'EOF'
-          import { importIndiaStocks } from "./scripts/importStocks.ts";
-          await importIndiaStocks();
-          EOF
+# - name: Full Import — India
+#   env:
+#     SUPABASE_URL:              ${{ secrets.SUPABASE_URL }}
+#     SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+#     FINNHUB_API_KEY:           ${{ secrets.FINNHUB_API_KEY }}
+#   run: |
+#     deno run --allow-net --allow-env - <<'EOF'
+#     import { importIndiaStocks } from "./scripts/importStocks.ts";
+#     await importIndiaStocks();
+#     EOF
+
 
       - name: Full Import — USA
         env:
