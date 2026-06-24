@@ -101,8 +101,11 @@ export async function importAustraliaStocks(): Promise<void> {
 // ── Entry point (run directly with Deno) ─────────────────────
 if (import.meta.main) {
   log("INFO", "Starting full stock import");
-  await importIndiaStocks();
+
+  // await importIndiaStocks();
+
   await importUSAStocks();
   await importAustraliaStocks();
+
   log("INFO", "Full import finished");
 }
